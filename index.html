@@ -825,6 +825,29 @@ body {
                 正在檢查系統相容性...
             </div>
         </div>
+<!-- 校正參數設定區 (新增) -->
+<div class="control-group calibration-inputs">
+    <div style="padding: 8px; background: var(--color-surface); border-bottom: 1px solid var(--color-border);">
+        <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px;">📏 校正參數 / Calibration</div>
+        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <label style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+                <span style="font-size: 11px; color: var(--color-text-secondary);">身高 (cm)</span>
+                <input type="number" id="inputHeight" value="170" placeholder="170" 
+                    style="padding: 4px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text);">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+                <span style="font-size: 11px; color: var(--color-text-secondary);">杖長 (cm)</span>
+                <input type="number" id="inputPole" value="110" placeholder="110" 
+                    style="padding: 4px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text);">
+            </label>
+        </div>
+        <div id="calibrationStatus" style="padding: 8px; background: var(--color-bg-1); border-radius: var(--radius-sm); font-size: 11px; color: var(--color-text); text-align: center;">
+            請載入影片以開始校正 / Load video to start
+        </div>
+    </div>
+</div>
+
+
         
         <!-- Main Content Grid -->
         <div class="main-grid">

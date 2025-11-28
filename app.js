@@ -63,6 +63,10 @@ const app = {
   },
   lastFootPositions: { left: null, right: null },
   pixelsPerCm: 5, // Default calibration (will be adjusted)
+  // 校正相關變數 (新增)
+  isCalibrating: false,
+  calibrationPoints: [],
+
   currentFrame: 0,
   lastProcessedFrame: -1,
   
@@ -125,6 +129,7 @@ const app = {
     
     // Input buttons are immediately clickable
     this.updateStatus('準備中...');
+    this.canvasElement.addEventListener('click', (e) => this.handleCalibrationClick(e));
   },
   
   // Initialize statistics tracking
@@ -1634,6 +1639,128 @@ const app = {
     if (toggle) this.showPoles = toggle.checked;
   },
   
+  // Toggle poles
+togglePoles() {
+    const toggle = document.getElementById('poleToggle2');
+    if (toggle) this.showPoles = toggle.checked;
+},
+
+// ===== 校正功能 (修改 4、5、6) =====
+
+handleVideoUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    this.videoElement.src = url;
+
+    this.videoElement.onloadedmetadata = () => {
+        this.canvasElement.width = this.videoElement.videoWidth;
+        this.canvasElement.height = this.videoElement.videoHeight;
+        this.videoElement.currentTime = 0;
+        
+        // 啟動校正模式而不是直接播放
+        this.startCalibrationMode();
+    };
+},
+
+startCalibrationMode() {
+    this.isCalibrating = true;
+    this.calibrationPoints = [];
+    this.videoElement.pause();
+    
+    this.canvasElement.classList.add('calibrating');
+    
+    // 更新狀態訊息
+    const statusEl = document.getElementById('calibrationStatus');
+    if (statusEl) {
+        statusEl.textContent = '👆 步驟 1/2: 點擊畫面中健走杖的「手柄位置」';
+        statusEl.className = 'status-message waiting';
+    }
+    
+    // 繪製第一幀
+    requestAnimationFrame(() => {
+        this.ctx.drawImage(this.videoElement, 0, 0, this.canvasElement.width, this.canvasElement.height);
+    });
+},
+
+handleCalibrationClick(event) {
+    if (!this.isCalibrating) return;
+
+    const rect = this.canvasElement.getBoundingClientRect();
+    const scaleX = this.canvasElement.width / rect.width;
+    const scaleY = this.canvasElement.height / rect.height;
+
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
+
+    this.calibrationPoints.push({ x, y });
+
+    // 繪製紅色標記點
+    this.ctx.fillStyle = '#FF5555';
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, 12, 0, 2 * Math.PI);
+    this.ctx.fill();
+    
+    // 繪製標記數字
+    this.ctx.fillStyle = 'white';
+    this.ctx.font = 'bold 14px Arial';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    this.ctx.fillText(this.calibrationPoints.length, x, y);
+
+    const statusEl = document.getElementById('calibrationStatus');
+    
+    if (this.calibrationPoints.length === 1) {
+        if (statusEl) {
+            statusEl.textContent = '👆 步驟 2/2: 點擊畫面中健走杖的「杖尖著地處」';
+        }
+    } else if (this.calibrationPoints.length === 2) {
+        // 畫出連接線
+        this.ctx.strokeStyle = '#FFFF00';
+        this.ctx.lineWidth = 4;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.calibrationPoints[0].x, this.calibrationPoints[0].y);
+        this.ctx.lineTo(this.calibrationPoints[1].x, this.calibrationPoints[1].y);
+        this.ctx.stroke();
+
+        setTimeout(() => this.finalizeCalibration(), 800);
+    }
+},
+
+finalizeCalibration() {
+    const p1 = this.calibrationPoints[0];
+    const p2 = this.calibrationPoints[1];
+    
+    const pixelDistance = Math.sqrt(
+        Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)
+    );
+    
+    const poleLengthCm = parseFloat(document.getElementById('inputPole').value) || 110;
+    
+    this.pixelsPerCm = pixelDistance / poleLengthCm;
+    
+    console.log(`✅ 校正完成: ${poleLengthCm}cm = ${pixelDistance.toFixed(0)}px`);
+    console.log(`📊 比例因子: ${this.pixelsPerCm.toFixed(3)} pixels/cm`);
+
+    this.isCalibrating = false;
+    this.canvasElement.classList.remove('calibrating');
+    
+    const statusEl = document.getElementById('calibrationStatus');
+    if (statusEl) {
+        statusEl.textContent = `✅ 校正完成! 比例: ${this.pixelsPerCm.toFixed(2)} px/cm - 分析中...`;
+        statusEl.className = 'status-message done';
+    }
+
+    this.videoElement.play();
+    this.startAnalysisLoop();
+},
+
+// Handle import video (file selection)
+handleImportVideo() {
+    document.getElementById('videoFileInput').click();
+},
+
   // Handle import video (file selection)
   handleImportVideo() {
     document.getElementById('videoFileInput').click();
