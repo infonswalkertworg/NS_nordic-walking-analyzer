@@ -855,9 +855,9 @@ const app = {
         if (this.currentView === 'front') {
             // Front view: left pole goes slightly right (behind), right pole goes slightly left (behind)
             if (side === 'left') {
-                endX = (wrist.x + 0.05) * canvas.width;  // Left hand pole slightly to the right
+                    endX = wrist.x * canvas.width;  // Left pole: vertical line (no offset)
             } else {
-                endX = (wrist.x - 0.05) * canvas.width;  // Right hand pole slightly to the left
+                    endX = wrist.x * canvas.width;  // Right pole: vertical line (no offset)
             }
         } else if (this.currentView === 'back') {
             // Back view: maintain same hand position (vertical line from hand)
