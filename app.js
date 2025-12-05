@@ -851,14 +851,21 @@ const app = {
         endX = (wrist.x - 0.25) * canvas.width;
       }
     } else {
-      // Front/back views: use Z-depth or slight offset
-      if (side === 'left') {
-        endX = (wrist.x - 0.08) * canvas.width;
-      } else {
-        endX = (wrist.x + 0.08) * canvas.width;
-      }
-    }
-    
+        // Front/back views: pole should be behind the body
+        if (this.currentView === 'front') {
+            // Front view: left pole goes slightly right (behind), right pole goes slightly left (behind)
+            if (side === 'left') {
+                endX = (wrist.x + 0.05) * canvas.width;  // Left hand pole slightly to the right
+            } else {
+                endX = (wrist.x - 0.05) * canvas.width;  // Right hand pole slightly to the left
+            }
+        } else if (this.currentView === 'back') {
+            // Back view: maintain same hand position (vertical line from hand)
+            endX = wrist.x * canvas.width;  // Pole stays directly below hand
+        } else {
+            // Fallback for other views
+            endX = wrist.x * canvas.width;
+        }    
     const endY = groundY;
     
     // Draw dashed line from hand to ground (backward)
