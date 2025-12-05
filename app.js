@@ -866,6 +866,7 @@ const app = {
             // Fallback for other views
             endX = wrist.x * canvas.width;
         }    
+              }
     const endY = groundY;
     
     // Draw dashed line from hand to ground (backward)
