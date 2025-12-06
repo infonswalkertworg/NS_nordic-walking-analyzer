@@ -1879,9 +1879,7 @@ finalizeCalibration() {
       console.error('匯入按鈕錯誤:', error);
       alert('無法打開檔案選取器。請碩驗你使用的瀏覽器或重載頁面。');
     }
-  }, 
-  },
-  
+  },   
   // Handle capture video (camera capture)
   handleCaptureVideo() {
     const captureInput = document.getElementById('videoCaptureInput');
