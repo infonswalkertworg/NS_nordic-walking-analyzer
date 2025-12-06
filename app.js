@@ -1883,7 +1883,7 @@ finalizeCalibration() {
       alert('無法打開檔案選取器。請碩驗你使用的瀏覽器或重載頁面。');
     }
   },   
-    const captureInput = document.getElementById('videoCaptureInput');
+    .getElementById('videoCaptureInput');
     // Fixed: document was split by newline
     
     // Try capture input first, fallback if not supported
