@@ -1872,14 +1872,15 @@ finalizeCalibration() {
 },
 
 // Handle import video (file selection)
-handleImportVideo() {
-  console.log('點擊匯入按鈕');
-  document.getElementById('videoFileInput').click();
-},
 
   // Handle import video (file selection)
   handleImportVideo() {
-    document.getElementById('videoFileInput').click();
+      try {
+        document.getElementById('videoFileInput').click();
+          } catch (error) {
+    console.error('匯入按鈕錯誤:', error);
+    alert('無法打開檔案揷取選長器。請碩驗你使用的瀏覽器或重載頁面。');
+  }
   },
   
   // Handle capture video (camera capture)
