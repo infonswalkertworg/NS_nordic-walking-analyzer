@@ -1884,6 +1884,7 @@ finalizeCalibration() {
   handleCaptureVideo() {
     const captureInput = document.getElementById('videoCaptureInput');
     const fallbackInput = document.getElementById('videoFallbackInput');
+    // Fixed: document was split by newline
     
     // Try capture input first, fallback if not supported
     try {
