@@ -1330,7 +1330,8 @@ const app = {
   detectGaitCycles() {
     // Simple gait detection based on hip and ankle position changes
     if (!this.currentPose || !this.currentPose.landmarks) return;
-    
+
+          },
     const landmarks = this.currentPose.landmarks;
     const leftAnkle = landmarks[27]; // LEFT_ANKLE
     const rightAnkle = landmarks[28]; // RIGHT_ANKLE
