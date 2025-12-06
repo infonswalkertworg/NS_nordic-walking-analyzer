@@ -1873,7 +1873,8 @@ finalizeCalibration() {
 
 // Handle import video (file selection)
 handleImportVideo() {
-    document.getElementById('videoFileInput').click();
+  console.log('點擊匯入按鈕');
+  document.getElementById('videoFileInput').click();
 },
 
   // Handle import video (file selection)
