@@ -1,4 +1,6 @@
-// North Star Walker Taiwan Nordic Walking Motion Analyzer - Multi-Angle View
+// North Star Walker Taiwan Nordic Walking Motion Analyzer - Multi-Angle View1886
+1886
+
 const app = {
   // State
   currentView: 'front',
@@ -1855,7 +1857,8 @@ finalizeCalibration() {
 
     this.isCalibrating = false;
     this.canvasElement.classList.remove('calibrating');
-    
+  1883
+  
     const statusEl = document.getElementById('calibrationStatus');
     if (statusEl) {
         statusEl.textContent = `✅ 校正完成! 比例: ${this.pixelsPerCm.toFixed(2)} px/cm - 分析中...`;
@@ -1880,10 +1883,7 @@ finalizeCalibration() {
       alert('無法打開檔案選取器。請碩驗你使用的瀏覽器或重載頁面。');
     }
   },   
-  // Handle capture video (camera capture)
-  handleCaptureVideo() {
     const captureInput = document.getElementById('videoCaptureInput');
-    const fallbackInput = document.getElementById('videoFallbackInput');
     // Fixed: document was split by newline
     
     // Try capture input first, fallback if not supported
