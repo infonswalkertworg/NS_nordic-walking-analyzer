@@ -61,6 +61,24 @@ const app = {
     values: [],
     average: 0
   },
+      // ===== Gait Cycle Detection (STEP 1 OPTIMIZATION) =====
+    gaitCycleData: {
+      cycles: [],
+      currentCycle: {
+        leftFootstrike: null,
+        rightFootstrike: null,
+        doubleSupportStart: null,
+        keyframes: []
+      },
+      lastLeftY: null,
+      lastRightY: null,
+      footstrikeThreshold: 0.02,
+      motionAnalysis: {
+        qualityScore: 0,
+        feedback: '',
+        keyIssues: []
+      }
+    },
   lastFootPositions: { left: null, right: null },
   pixelsPerCm: 5, // Default calibration (will be adjusted)
   // 校正相關變數 (新增)
@@ -2356,3 +2374,4 @@ if (document.readyState === 'loading') {
 
 // Expose app globally for debugging
 window.app = app;
+      
