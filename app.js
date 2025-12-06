@@ -1349,6 +1349,8 @@ const app = {
     
     // Update pole statistics display
     this.updatePoleStatsDisplay();
+            // Update gait cycle display panel (STEP 1)
+        this.updateGaitCycleDisplay();
     
     // Add stride statistics for side views
     if ((this.currentView === 'left' || this.currentView === 'right') && this.strideStats.values.length > 0) {
