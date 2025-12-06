@@ -1877,7 +1877,7 @@ finalizeCalibration() {
       input.click();
     } catch (error) {
       console.error('匯入按鈕錯誤:', error);
-      alert('無法打開檔案揷取器。請碩驗你使用的瀏覽器或重載頁面。');
+      alert('無法打開檔案選取器。請碩驗你使用的瀏覽器或重載頁面。');
     }
   }, 
   },
