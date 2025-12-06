@@ -1754,11 +1754,6 @@ const app = {
     if (toggle) this.showPoles = toggle.checked;
   },
   
-  // Toggle poles
-togglePoles() {
-    const toggle = document.getElementById('poleToggle2');
-    if (toggle) this.showPoles = toggle.checked;
-},
 
 // ===== 校正功能 (修改 4、5、6) =====
 
