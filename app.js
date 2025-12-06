@@ -1,114 +1,4 @@
 // North Star Walker Taiwan Nordic Walking Motion Analyzer - Multi-Angle View
-
-// ===== OPTIMIZATION CONFIG (v7.1) =====
-const PERF_CONFIG = {
-  // Performance thresholds
-  MAX_HISTORY_VALUES: 300,
-  DEFAULT_FPS: 30,
-  POSE_CONFIDENCE_THRESHOLD: 0.5,
-  LANDMARK_VISIBILITY_THRESHOLD: 0.5,
-  
-  // Memory management
-  ENABLE_MEMORY_CLEANUP: true,
-  CLEANUP_INTERVAL_MS: 5000,
-  
-  // Animation
-  USE_REQUEST_ANIMATION_FRAME: true,
-  
-  // UI Updates
-  BATCH_DOM_UPDATES: true,
-  DEBOUNCE_UI_UPDATE_MS: 50
-};
-
-// DOM Element Cache - avoid repeated queries
-const DOM_CACHE = {};
-
-function initDOMCache() {
-  DOM_CACHE.groundLineToggles = [
-    document.getElementById('groundLineToggle'),
-    document.getElementById('groundLineToggle2')
-  ];
-  DOM_CACHE.verticalLineToggles = [
-    document.getElementById('verticalLineToggle'),
-    document.getElementById('verticalLineToggle2')
-  ];
-  DOM_CACHE.skeletonToggles = [
-    document.getElementById('skeletonToggle'),
-    document.getElementById('skeletonToggle2')
-  ];
-  DOM_CACHE.comToggles = [
-    document.getElementById('comToggle'),
-    document.getElementById('comToggle2')
-  ];
-  DOM_CACHE.poleToggle = document.getElementById('poleToggle2');
-  DOM_CACHE.angleDisplay = document.getElementById('angleDisplay');
-  DOM_CACHE.gaitCycleDisplay = document.getElementById('gaitCycleDisplay');
-  DOM_CACHE.poleStatsDisplay = document.getElementById('poleStatsDisplay');
-  DOM_CACHE.statusIndicator = document.getElementById('statusIndicator');
-  DOM_CACHE.headerStatus = document.getElementById('headerStatus');
-  DOM_CACHE.timeDisplay = document.getElementById('timeDisplay');
-  DOM_CACHE.timeDisplayTop = document.getElementById('timeDisplayTop');
-}
-
-// Utility: Synchronized toggle with cached elements
-function syncToggleCached(toggleKey, propertyName, app) {
-  const toggles = DOM_CACHE[toggleKey];
-  if (!toggles || !toggles[0] || !toggles[1]) return;
-  
-  const value = toggles[0].checked;
-  app[propertyName] = value;
-  toggles[0].checked = value;
-  toggles[1].checked = value;
-}
-
-// Utility: Circular buffer for memory-efficient history
-class CircularBuffer {
-  constructor(maxSize) {
-    this.maxSize = maxSize;
-    this.buffer = [];
-    this.index = 0;
-  }
-  
-  push(value) {
-    if (this.buffer.length < this.maxSize) {
-      this.buffer.push(value);
-    } else {
-      this.buffer[this.index] = value;
-    }
-    this.index = (this.index + 1) % this.maxSize;
-  }
-  
-  getAll() {
-    return this.buffer.slice();
-  }
-  
-  clear() {
-    this.buffer = [];
-    this.index = 0;
-  }
-  
-  get length() {
-    return this.buffer.length;
-  }
-}
-
-// Utility: Validate landmark
-function isLandmarkValid(landmark, requiredVisibility = PERF_CONFIG.LANDMARK_VISIBILITY_THRESHOLD) {
-  return landmark && 
-         landmark.visibility !== undefined && 
-         landmark.visibility > requiredVisibility;
-}
-
-// Utility: Debounce function
-function debounce(func, delay) {
-  let timeout;
-  return function(...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), delay);
-  };
-}
-
-
 const app = {
   // State
   currentView: 'front',
@@ -168,7 +58,7 @@ const app = {
     current: 0,
     max: 0,
     min: Infinity,
-    values: new CircularBuffer(PERF_CONFIG.MAX_HISTORY_VALUES),
+    values: [],
     average: 0
   },
       // ===== Gait Cycle Detection (STEP 1 OPTIMIZATION) =====
@@ -244,7 +134,6 @@ const app = {
   
   // Initialize the app
   init() {
-        initDOMCache();
     this.canvasElement = document.getElementById('outputCanvas');
     this.canvasCtx = this.canvasElement.getContext('2d');
     this.ratioBox = document.getElementById('ratioBox');
@@ -271,7 +160,7 @@ const app = {
           current: 0,
           max: 0,
           min: Infinity,
-          values: new CircularBuffer(PERF_CONFIG.MAX_HISTORY_VALUES),
+          values: [],
           average: 0
         };
       });
@@ -1049,7 +938,7 @@ const app = {
         current: 0,
         max: 0,
         min: Infinity,
-        values: new CircularBuffer(PERF_CONFIG.MAX_HISTORY_VALUES),
+        values: [],
         average: 0
       };
     }
@@ -2094,7 +1983,7 @@ finalizeCalibration() {
         current: 0,
         max: 0,
         min: Infinity,
-        values: new CircularBuffer(PERF_CONFIG.MAX_HISTORY_VALUES),
+        values: [],
         average: 0
       };
     });
@@ -2106,7 +1995,7 @@ finalizeCalibration() {
       current: 0,
       max: 0,
       min: Infinity,
-      values: new CircularBuffer(PERF_CONFIG.MAX_HISTORY_VALUES),
+      values: [],
       average: 0
     };
     
