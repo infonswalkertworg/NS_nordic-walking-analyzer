@@ -1872,15 +1872,19 @@ finalizeCalibration() {
 },
 
 // Handle import video (file selection)
-
-  // Handle import video (file selection)
   handleImportVideo() {
-      try {
-        document.getElementById('videoFileInput').click();
-          } catch (error) {
-    console.error('匯入按鈕錯誤:', error);
-    alert('無法打開檔案揷取選長器。請碩驗你使用的瀏覽器或重載頁面。');
-  }
+    try {
+      const input = document.getElementById('videoFileInput');
+      if (!input) {
+        console.error('檔案輸入元素不存在');
+        return;
+      }
+      input.click();
+    } catch (error) {
+      console.error('匯入按鈕錯誤:', error);
+      alert('無法打開檔案揷取器。請碩驗你使用的瀏覽器或重載頁面。');
+    }
+  },  }
   },
   
   // Handle capture video (camera capture)
