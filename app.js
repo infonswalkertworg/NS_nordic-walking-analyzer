@@ -1256,6 +1256,7 @@ const app = {
     
     // Update angle display HTML
     const angleDisplay = document.getElementById('angleDisplay');
+    
     angleDisplay.innerHTML = '';
     
     config.angles.forEach(angleConfig => {
@@ -1321,6 +1322,30 @@ const app = {
       
       angleDisplay.appendChild(angleItem);
     });
+
+        // Update gait cycle display panel (STEP 1 - NEW)
+    updateGaitCycleDisplay() {
+        const gaitCycleDisplay = document.getElementById('gaitCycleDisplay');
+        if (!gaitCycleDisplay) return;
+        if (!this.gaitCycleData || this.gaitCycleData.cycles.length === 0) {
+            gaitCycleDisplay.innerHTML = '<div style="font-size: 11px; color: var(--color-text-secondary); text-align: center; padding: 20px;">等待分析...</div>';
+            return;
+        }
+        const qualityScore = this.gaitCycleData.motionAnalysis.qualityScore;
+        const feedback = this.gaitCycleData.motionAnalysis.feedback;
+        const keyIssues = this.gaitCycleData.motionAnalysis.keyIssues;
+        let html = '<div style="margin-bottom: 8px;"><div style="font-size: 10px; margin-bottom: 4px;">完整度評分</div>';
+        html += '<div style="background: var(--color-bg-3); height: 24px; border-radius: 4px;"><div style="background: linear-gradient(90deg, #4CAF50, #FFC107); height: 100%; width: ' + qualityScore + '%;"></div></div></div>';
+        if (feedback) {
+            html += '<div style="margin: 8px 0; padding: 8px; background: var(--color-bg-2); border-radius: 4px; border-left: 2px solid var(--color-primary);"><div style="font-size: 10px; font-weight: bold; color: var(--color-primary); margin-bottom: 4px;">💡 教練提示</div><div style="font-size: 9px;">' + feedback + '</div></div>';
+        }
+        if (keyIssues.length > 0) {
+            html += '<div style="margin: 8px 0; padding: 8px; background: var(--color-bg-1); border-radius: 4px;"><div style="font-size: 10px; font-weight: bold; color: var(--color-warning); margin-bottom: 4px;">⚠️ 需改進項目</div>';
+            keyIssues.forEach(issue => { html += '<div style="font-size: 9px;">• ' + issue + '</div>'; });
+            html += '</div>';
+        }
+        gaitCycleDisplay.innerHTML = html;
+    },
     
     // Update pole statistics display
     this.updatePoleStatsDisplay();
