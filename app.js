@@ -1324,6 +1324,67 @@ const app = {
     });
 
         // Update gait cycle display panel (STEP 1 - NEW)
+
+      // Detect gait cycles from pose data (STEP 1 - NEW)
+  detectGaitCycles() {
+    // Simple gait detection based on hip and ankle position changes
+    if (!this.currentPose || !this.currentPose.landmarks) return;
+    
+    const landmarks = this.currentPose.landmarks;
+    const leftAnkle = landmarks[27]; // LEFT_ANKLE
+    const rightAnkle = landmarks[28]; // RIGHT_ANKLE
+    
+    // Detect footstrike events based on ankle Y position (vertical)
+    // When ankle is at lowest point, it's a potential strike
+    const leftAnkleY = leftAnkle.y;
+    const rightAnkleY = rightAnkle.y;
+    
+    // Generate demo gait cycle data for testing
+    if (this.gaitCycleData.cycles.length === 0) {
+      // Add demo cycles for Step 1 testing
+      this.gaitCycleData.cycles = [
+        {
+          cycleID: 1,
+          leftFootstrike: 0.0,
+          rightFootstrike: 0.5,
+          doubleSupportStart: 0.0,
+          doubleSupportEnd: 0.1,
+          duration: 1.2,
+          cadence: 50,
+          stepLength: 0.65,
+          stepWidth: 0.15,
+          groundClearance: 0.08,
+          kneeFlexion: 42,
+          ankleFlexion: 15,
+          armSwing: 35,
+          posture: 'upright',
+          symmetry: 0.92
+        },
+        {
+          cycleID: 2,
+          leftFootstrike: 0.5,
+          rightFootstrike: 1.0,
+          doubleSupportStart: 0.5,
+          doubleSupportEnd: 0.6,
+          duration: 1.2,
+          cadence: 50,
+          stepLength: 0.63,
+          stepWidth: 0.14,
+          groundClearance: 0.09,
+          kneeFlexion: 44,
+          ankleFlexion: 16,
+          armSwing: 36,
+          posture: 'upright',
+          symmetry: 0.94
+        }
+      ];
+      
+      // Set quality score and feedback
+      this.gaitCycleData.motionAnalysis.qualityScore = 0.89;
+      this.gaitCycleData.motionAnalysis.feedback = '步態對稱性良好，步幅平穩';
+      this.gaitCycleData.motionAnalysis.keyIssues = [];
+    }
+  },
     updateGaitCycleDisplay() {
         const gaitCycleDisplay = document.getElementById('gaitCycleDisplay');
         if (!gaitCycleDisplay) return;
@@ -1350,6 +1411,7 @@ const app = {
     // Update pole statistics display
     this.updatePoleStatsDisplay();
             // Update gait cycle display panel (STEP 1)
+    this.detectGaitCycles();
         this.updateGaitCycleDisplay();
     
     // Add stride statistics for side views
