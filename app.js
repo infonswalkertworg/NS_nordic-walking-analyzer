@@ -1322,8 +1322,7 @@ const app = {
         angleItem.appendChild(statsRow);
       }
       
-      angleDisplay.appendChild(angleItem);
-    });,
+      angleDisplay.appendChild(angleItem);},
 
         // Update gait cycle display panel (STEP 1 - NEW)
 
