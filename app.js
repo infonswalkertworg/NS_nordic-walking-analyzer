@@ -2439,6 +2439,72 @@ finalizeCalibration() {
       }
     }
   }
+
+    // 匯入視頻處理函式
+    handleImportVideo() {
+      try {
+        // 優先嘗試各種輸入方法
+        const videoInput = document.getElementById('videoFileInput');
+        const videoCaptureInput = document.getElementById('videoCaptureInput');
+        const videoFallbackInput = document.getElementById('videoFallbackInput');
+        
+        // 根據瀏覽器能力選擇最合適的輸入方式
+        if (videoInput) {
+          videoInput.click();
+        } else if (videoCaptureInput) {
+          videoCaptureInput.click();
+        } else if (videoFallbackInput) {
+          videoFallbackInput.click();
+        } else {
+          console.warn('No file input element found');
+          this.updateStatus('找不到檔案輸入元素');
+        }
+      } catch (error) {
+        console.error('Error in handleImportVideo:', error);
+        this.updateStatus('匯入視頻時出錯: ' + error.message);
+      }
+    },
+
+    // 檔案選擇處理函式
+    handleFileSelected(event) {
+      try {
+        const file = event.target.files && event.target.files[0];
+        if (!file) {
+          console.warn('No file selected');
+          return;
+        }
+        
+        console.log('File selected:', file.name, 'Size:', file.size, 'Type:', file.type);
+        
+        // 建立 File Reader
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+          try {
+            const videoData = e.target.result;
+            const blob = new Blob([videoData], { type: file.type });
+            const videoUrl = URL.createObjectURL(blob);
+            
+            console.log('Video URL created:', videoUrl);
+            this.loadVideoFromUrl(videoUrl);
+            this.updateStatus('視頻已載入: ' + file.name);
+          } catch (error) {
+            console.error('Error processing file:', error);
+            this.updateStatus('處理檔案時出錯: ' + error.message);
+          }
+        };
+        
+        reader.onerror = (error) => {
+          console.error('FileReader error:', error);
+          this.updateStatus('讀取檔案時出錯');
+        };
+        
+        reader.readAsArrayBuffer(file);
+      } catch (error) {
+        console.error('Error in handleFileSelected:', error);
+        this.updateStatus('選擇檔案時出錯: ' + error.message);
+      }
+    },
 };
 
 // Dynamically adjust canvas parent aspect-ratio to match source video/camera
